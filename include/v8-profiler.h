@@ -336,6 +336,15 @@ class V8_EXPORT CpuProfiler {
    * Starts collecting a CPU profile. Title may be an empty string. Several
    * profiles may be collected at once. Attempts to start collecting several
    * profiles with the same title are silently ignored.
+   *
+   * Returns true if profiling was started.
+   */
+  void StartProfilingEx(Local<String> title, CpuProfilingOptions options);
+
+  /**
+   * Starts collecting a CPU profile. Title may be an empty string. Several
+   * profiles may be collected at once. Attempts to start collecting several
+   * profiles with the same title are silently ignored.
    */
   void StartProfiling(Local<String> title, CpuProfilingOptions options);
 

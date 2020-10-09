@@ -312,6 +312,7 @@ class V8_EXPORT_PRIVATE CpuProfiler {
   void set_sampling_interval(base::TimeDelta value);
   void set_use_precise_sampling(bool);
   void CollectSample();
+  bool StartProfilingEx(const char* title, CpuProfilingOptions options = {});
   void StartProfiling(const char* title, CpuProfilingOptions options = {});
   void StartProfiling(String title, CpuProfilingOptions options = {});
 

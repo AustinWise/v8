@@ -3065,6 +3065,24 @@ TEST(MultipleProfilers) {
   profiler2->StopProfiling("2");
 }
 
+TEST(MaximumNumberOfProfilers) {
+  std::unique_ptr<CpuProfiler> profiler(new CpuProfiler(CcTest::i_isolate()));
+
+  std::vector<std::unique_ptr<std::string>> profilerNames{};
+
+  for (size_t i = 1; i < CpuProfilesCollection::kMaxSimultaneousProfiles + 1; i++) {
+    std::string* str = new std::string(std::to_string(i));
+    profilerNames.emplace_back(str);
+    CHECK(profiler->StartProfilingEx(str->c_str(), v8::CpuProfilingOptions{}));
+  }
+
+  CHECK(!profiler->StartProfilingEx("one_to_many", v8::CpuProfilingOptions{}));
+
+  for (const auto& str : profilerNames) {
+    profiler->StopProfiling(str->c_str());
+  }
+}
+
 // Tests that logged CodeCreateEvent calls do not crash a reused CpuProfiler.
 // crbug.com/929928
 TEST(CrashReusedProfiler) {

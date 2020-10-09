@@ -530,17 +530,25 @@ void CpuProfiler::CollectSample() {
   }
 }
 
+bool CpuProfiler::StartProfilingEx(const char* title,
+                                 CpuProfilingOptions options) {
+  if (!profiles_->StartProfiling(title, options)) {
+    return false;
+  }
+
+  TRACE_EVENT0("v8", "CpuProfiler::StartProfiling");
+  AdjustSamplingInterval();
+  StartProcessorIfNotStarted();
+  return true;
+}
+
 void CpuProfiler::StartProfiling(const char* title,
                                  CpuProfilingOptions options) {
-  if (profiles_->StartProfiling(title, options)) {
-    TRACE_EVENT0("v8", "CpuProfiler::StartProfiling");
-    AdjustSamplingInterval();
-    StartProcessorIfNotStarted();
-  }
+  StartProfilingEx(title, options);
 }
 
 void CpuProfiler::StartProfiling(String title, CpuProfilingOptions options) {
-  StartProfiling(profiles_->GetName(title), options);
+  StartProfilingEx(profiles_->GetName(title), options);
 }
 
 void CpuProfiler::StartProcessorIfNotStarted() {
